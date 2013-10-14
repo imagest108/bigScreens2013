@@ -1,0 +1,52 @@
+
+
+/* ==========================================================================
+   Author's custom styles
+   ========================================================================== */
+
+body { 
+      background-color:white;
+      -webkit-user-select: none;
+      margin: 0;
+      padding: 0;
+    }
+    div {
+      position: relative;
+      width: 160px;
+      height: 160px;
+    }
+
+    #red {
+      margin: 0 auto 0 auto;
+      background: url('http://itp.nyu.edu/~jhl589/bs/red.jpg') no-repeat;
+      top: 10px;
+    }
+
+    #red:active {
+      background: url('http://itp.nyu.edu/~jhl589/bs/red-pressed.jpg') no-repeat;
+    }
+
+    #green {
+      margin: 0 auto 0 auto;
+      background: url('http://itp.nyu.edu/~jhl589/bs/green.jpg') no-repeat;
+      top: 10px;
+    }
+
+    #green:active {
+      background: url('http://itp.nyu.edu/~jhl589/bs/green-pressed.jpg') no-repeat;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

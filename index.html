@@ -1,0 +1,275 @@
+<html>
+  <head>
+
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+
+    <link rel="stylesheet" type="text/css" href="/css/main.css">
+    <script type="text/javascript" charset="utf-8" src="http://o.aolcdn.com/dojo/1.1.1/dojo/dojo.xd.js"></script>
+  
+    <script src="/js/processing-1.4.1.js"></script>
+    <script src="/socket.io/socket.io.js"></script>  
+    <script>
+
+      //hard-coded Processing code, text from an HTML widget, downloaded text, etc.
+      //var processingCode = "..."; 
+      //var jsCode = Processing.compile(processingCode).sourceCode;
+
+      var socket = io.connect('http://localhost:5000/');
+
+      var id; 
+      var userObjs = [];
+
+      var objectX;
+      var objectY;
+      var objectID; 
+
+      socket.on('connect', function(){
+
+        console.log("Connected : "+socket.socket.sessionid);
+        id = socket.socket.sessionid;
+      });
+
+      socket.on('news', function (data) {
+           console.log(data);
+           
+           if(data.index > 0) {
+            createUser(data);
+           }else {
+            displayCanvas();
+           }
+
+           drawUser();
+      });
+
+
+      socket.on('button', function (data) {
+
+        for(var i = 0 ; i < userObjs.length; i++){
+
+          if(userObjs[i].objectID == data.id){
+            console.log("find the moving user!");
+            updateUser(userObjs[i], data.button);
+
+          }
+        } 
+      });
+
+      var sendbtn = function(button) {
+        socket.emit('button', { id: id, button: button });
+      };
+
+      dojo.addOnLoad(function(){
+
+        //document.getElementById('debug').innerHTML = 'hello';
+
+        var redBtn = dojo.byId("red"); 
+        var greenBtn = dojo.byId("green"); 
+
+        var dragging = false;
+        var sizing = false;
+        var rotating = 0;
+
+
+        function touch(evt){
+          
+          dojo.forEach(evt.changedTouches, function(e){
+
+            e.preventDefault(); 
+
+            var target = e.target;
+
+            if(target == greenBtn || target == redBtn){
+              if(!dragging) {
+                // Save the offset of the touch within the current note 
+                          dragging = [e.pageX - dojo.style(node, "left"), e.pageY - dojo.style(node, "top")]; 
+              }
+            }
+          }); 
+        }
+
+
+        function touchend(evt){
+
+          dojo.forEach(evt.changedTouches, function(e){
+            
+            var target = e.target;
+
+            if(target == greenBtn){
+              sendbtn('green');
+              document.getElementById('debug').innerHTML = 'green pressed';   
+
+            } else if(target == redBtn) {
+              sendbtn('red');
+              document.getElementById('debug').innerHTML = 'red pressed';   
+            }
+
+            // Check to see if we've gone from a gesture back down to a touch
+            if(e.target == redBtn || e.target == greenBtn){
+              if (evt.targetTouches.length == 1) { 
+                          // If there was rotation, this number needs to be reset 
+                        dragging = [evt.targetTouches[0].pageX - dojo.style(node, "left"), evt.targetTouches[0].pageY - dojo.style(node, "top")]; 
+                    } else if (!evt.targetTouches.length) { 
+                        dragging = false; 
+                    }
+            }
+          });
+        }
+
+
+        function touchmove(evt){
+
+          evt.preventDefault();
+          dojo.forEach(evt.changedTouches, function(e){
+            if(e.target == redBtn || e.target == greenBtn){
+              // Move the node if we're in a state of dragging, but not resizing  
+              
+              document.getElementById('debug').innerHTML = e.pageX + " , " + e.pageY;
+
+              dojo.style(e.target, {
+                left: e.pageX - dragging[0] + "px",
+                top: e.pageY - dragging[1] + "px"
+              });
+            }
+          });
+
+        }
+
+        dojo.connect(dojo.doc, "ontouchstart", touch);
+        dojo.query("div").connect("ontouchmove", touchmove);
+        dojo.connect(dojo.doc, "ontouchend", touchend);
+      });
+
+      socket.on('message', function (data){
+
+        console.log("Recieved : "+ data);
+
+      });
+
+      var canvas;
+      var context;
+      var processingInstance;
+
+
+      var initcanvas = function(){
+
+        canvas = document.getElementById("thecanvas");  
+        context = canvas.getContext('2d');
+        drawBackground();
+
+        
+        // if (!processingInstance) {
+        //         processingInstance = Processing.getInstanceById('thecanvas');
+        //     }    
+  
+        //var processingInstance = new Processing(canvas, sketchProc);
+        
+      };
+
+      function sketchProc(processing) {
+          // Override draw function, by default it will be called 60 times per second
+
+        processing.setup = function() {
+
+            processing.size(screen.width,screen.height);
+            processing.background(225,0,0);
+
+        };
+
+        processing.draw = function() {
+            
+            processing.background(225,0,0);
+
+        };
+
+      }
+
+          var updateUser = function (object, button){
+
+            console.log("object : "+ object);
+            console.log("button : "+ button);
+
+            if(button == 'green'){
+
+              object.objectY = object.objectY+5;
+              console.log("move down");
+
+            }else if(button == 'red'){
+
+              object.objectY = object.objectY-5;
+              console.log("move up");
+            }
+
+            drawBackground();
+            for(var i = 0 ; i< userObjs.length ; i++){
+          drawUser(userObjs[i]);
+        }
+          };
+
+          var createUser = function (data){
+
+            var userObj = {
+
+          objectID : data.uid,
+          objectIndex : "user"+ data.index,
+          objectX : data.index*100,
+          objectY : 150,
+
+        };
+
+        //processingInstance.population = data.index;
+        userObjs.push(userObj);
+        console.log(userObjs);
+
+        for(var i = 0 ; i< userObjs.length ; i++){
+          //drawBackground();
+          drawUser(userObjs[i]);
+        }
+
+          }
+
+      var drawUser = function (object){
+        /*
+          context.beginPath();
+          context.arc(object.objectX, object.objectY, 40, 0, 2*Math.PI);
+          context.stroke();
+          context.fillStyle = '#000000';
+              context.fill();
+
+              context.fillStyle = '#ffffff';
+              context.font="14px Arial";
+            context.fillText(object.objectIndex, object.objectX-20, object.objectY);
+        */
+      };
+
+      var displayCanvas = function(){
+        canvas.style.display="inline";
+        
+        var Display_socket_green = document.getElementById("green");
+        var Display_socket_red = document.getElementById("red");
+
+        Display_socket_red.style.display = "none";
+        Display_socket_green.style.display = "none";
+        
+      };
+
+      var drawBackground = function(){
+
+        context.fillStyle = "#FF0000";
+        context.fillRect(0,0,canvas.width, canvas.height);
+
+      }
+
+      
+
+
+    </script>
+    
+  </head>
+  <body onload = "initcanvas();">
+    <span id="debug"></span>
+    <div id="red"><a id="red"></a></div>
+    <div id="green"><a id="green"></a></div>
+    <canvas width = "1212" height = "558" id = "thecanvas" style = "display:none" data-processing-sources="/pjs/ball.pde"></canvas>
+
+  </body>
+</html>
