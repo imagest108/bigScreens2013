@@ -14,7 +14,7 @@
       //var processingCode = "..."; 
       //var jsCode = Processing.compile(processingCode).sourceCode;
 
-      var socket = io.connect('http://localhost:5000/');
+      var socket = io.connect('http://bigscreensprototype.herokuapp.com/');
 
       var id; 
       var userObjs = [];
@@ -155,33 +155,8 @@
         canvas = document.getElementById("thecanvas");  
         context = canvas.getContext('2d');
         drawBackground();
-
-        
-        // if (!processingInstance) {
-        //         processingInstance = Processing.getInstanceById('thecanvas');
-        //     }    
-  
-        //var processingInstance = new Processing(canvas, sketchProc);
         
       };
-
-      function sketchProc(processing) {
-          // Override draw function, by default it will be called 60 times per second
-
-        processing.setup = function() {
-
-            processing.size(screen.width,screen.height);
-            processing.background(225,0,0);
-
-        };
-
-        processing.draw = function() {
-            
-            processing.background(225,0,0);
-
-        };
-
-      }
 
           var updateUser = function (object, button){
 
