@@ -70,7 +70,7 @@ io.sockets.on('connection',
 
     socket.on('disconnect', function() {
 
-      socket.broadcast.emit('disconnect', socket.id);
+      io.sockets.socket(display_socket).emit('disconnect', socket.id);
       
       var index = -1;
       for(var i=0; i<users.length; i++) {

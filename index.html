@@ -10,11 +10,7 @@
     <script src="/socket.io/socket.io.js"></script>  
     <script>
 
-      //hard-coded Processing code, text from an HTML widget, downloaded text, etc.
-      //var processingCode = "..."; 
-      //var jsCode = Processing.compile(processingCode).sourceCode;
-
-      var socket = io.connect('http://bigscreensprototype.herokuapp.com/');
+      var socket = io.connect('http://localhost:5000/');
 
       var id; 
       var userObjs = [];
@@ -38,7 +34,6 @@
             displayCanvas();
            }
 
-           drawUser();
       });
 
 
@@ -59,8 +54,6 @@
       };
 
       dojo.addOnLoad(function(){
-
-        //document.getElementById('debug').innerHTML = 'hello';
 
         var redBtn = dojo.byId("red"); 
         var greenBtn = dojo.byId("green"); 
@@ -145,6 +138,13 @@
 
       });
 
+      socket.on('disconnect', function (data){
+
+        console.log("Disconnected User : "+ data);
+        removeUser(data);
+
+      });
+
       var canvas;
       var context;
       var processingInstance;
@@ -154,66 +154,55 @@
 
         canvas = document.getElementById("thecanvas");  
         context = canvas.getContext('2d');
-        drawBackground();
         
       };
 
-          var updateUser = function (object, button){
+      var updateUser = function (object, button){
 
             console.log("object : "+ object);
             console.log("button : "+ button);
 
-            if(button == 'green'){
+            if(button == 'red'){
 
-              object.objectY = object.objectY+5;
-              console.log("move down");
+               var pjs = Processing.getInstanceById("thecanvas");   
+               pjs.makeJump(object.objectID);
 
-            }else if(button == 'red'){
+               }
+      };
 
-              object.objectY = object.objectY-5;
-              console.log("move up");
-            }
-
-            drawBackground();
-            for(var i = 0 ; i< userObjs.length ; i++){
-          drawUser(userObjs[i]);
-        }
-          };
-
-          var createUser = function (data){
+      var createUser = function (data){
 
             var userObj = {
 
           objectID : data.uid,
           objectIndex : "user"+ data.index,
           objectX : data.index*100,
-          objectY : 150,
+          objectY : 500,
 
         };
 
-        //processingInstance.population = data.index;
         userObjs.push(userObj);
         console.log(userObjs);
 
-        for(var i = 0 ; i< userObjs.length ; i++){
-          //drawBackground();
-          drawUser(userObjs[i]);
-        }
+        var pjs = Processing.getInstanceById("thecanvas");          
+        pjs.addBall(userObj.objectX, userObj.objectY, userObj.objectID);
+        
+      };
+
+      var removeUser = function(data){
+
+        for(var i = 0 ; i < userObjs.length ; i++){
+
+          if(userObjs[i].objectID == data){
+
+              userObjs.splice(i,1);
+              console.log(userObjs);
+
+              var pjs = Processing.getInstanceById("thecanvas");          
+              pjs.removeBall(data);
 
           }
-
-      var drawUser = function (object){
-        /*
-          context.beginPath();
-          context.arc(object.objectX, object.objectY, 40, 0, 2*Math.PI);
-          context.stroke();
-          context.fillStyle = '#000000';
-              context.fill();
-
-              context.fillStyle = '#ffffff';
-              context.font="14px Arial";
-            context.fillText(object.objectIndex, object.objectX-20, object.objectY);
-        */
+        }
       };
 
       var displayCanvas = function(){
@@ -225,16 +214,7 @@
         Display_socket_red.style.display = "none";
         Display_socket_green.style.display = "none";
         
-      };
-
-      var drawBackground = function(){
-
-        context.fillStyle = "#FF0000";
-        context.fillRect(0,0,canvas.width, canvas.height);
-
-      }
-
-      
+      };      
 
 
     </script>
