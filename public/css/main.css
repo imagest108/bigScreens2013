@@ -5,40 +5,143 @@
    ========================================================================== */
 
 body { 
-      background-color:white;
-      -webkit-user-select: none;
-      margin: 0;
-      padding: 0;
+  margin: 0;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+  color: #333333;
+  background-color: #ffffff;
+
     }
-    div {
-      position: relative;
-      width: 160px;
-      height: 160px;
+
+button,
+input,
+select,
+textarea {
+  margin: 0;
+  font-size: 100%;
+  vertical-align: middle;
+}
+button,
+input {
+  *overflow: visible;
+  line-height: normal;
+}
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+  padding: 0;
+  border: 0;
+}
+button,
+html input[type="button"],
+input[type="reset"],
+input[type="submit"] {
+  -webkit-appearance: button;
+  cursor: pointer;
+}
+label,
+select,
+button,
+input[type="button"],
+input[type="reset"],
+input[type="submit"],
+input[type="radio"],
+input[type="checkbox"] {
+  cursor: pointer;
+}
+input[type="search"] {
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  -webkit-appearance: textfield;
+}
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+}
+textarea {
+  overflow: auto;
+  vertical-align: top;
+}
+
+    span {
+
+
     }
 
     #red {
-      margin: 0 auto 0 auto;
-      background: url('http://itp.nyu.edu/~jhl589/bs/red.jpg') no-repeat;
-      top: 10px;
+
+        border-radius: 20px;
+        border-style: outset;
+        border-width: 5px;
+        border-color: #CCFFCC;
+        margin: 10px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        width: 196px;
+        height: 120px;
+        background-color: #e92319;
+  
     }
 
-    #red:active {
-      background: url('http://itp.nyu.edu/~jhl589/bs/red-pressed.jpg') no-repeat;
+    #red:hover {
+    
+        background-color: #8C150F;
+        border-color: #e92319;
     }
 
-    #green {
-      margin: 0 auto 0 auto;
-      background: url('http://itp.nyu.edu/~jhl589/bs/green.jpg') no-repeat;
-      top: 10px;
+    #yellow {
+
+        border-radius: 20px;
+        border-style: outset;
+        border-width: 5px;
+        border-color: #CCFFCC;
+        margin: 10px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        width: 196px;
+        height: 120px;
+        background-color: #FFCC00;
     }
 
-    #green:active {
-      background: url('http://itp.nyu.edu/~jhl589/bs/green-pressed.jpg') no-repeat;
+    #yellow:hover {
+
+        background-color: #FF6600;
+        border-color: #FFCC00;
+      
+    
     }
 
+    #purple {
 
+        border-radius: 20px;
+        border-style: outset;
+        border-width: 5px;
+        border-color: #CCFFCC;
+        margin: 10px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        width: 196px;
+        height: 120px;
+        background-color: #660066;
+  
+    }
 
+    #purple:hover {
 
+        background-color: #330033;
+        border-color: #660066;
+
+    }
+
+    #debug {
+
+        margin: 10px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        height: 30px;
+    }
 
 
 

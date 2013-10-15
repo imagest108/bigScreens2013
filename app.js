@@ -21,8 +21,6 @@ var httpServer = http.createServer(app);
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(__dirname + '/'));
 
-
-//var server = http.createServer(app);
 httpServer.listen(port);
 
 console.log('http server listening on %d', port);
@@ -45,7 +43,7 @@ io.sockets.on('connection',
     users[users.length] = socket.id;
     
     //Set a Java client as a display_socket
-
+    
     var display_socket = users[0];
 
     io.sockets.socket(display_socket).emit('news', { uid: socket.id, index: users.length-1});
