@@ -21,7 +21,7 @@
 
       socket.on('connect', function(){
 
-        console.log("Connected : "+socket.socket.sessionid);
+        console.log("Connected : "+socket.socket.sessionid+","+userObjs.length);
         id = socket.socket.sessionid;
       });
 
