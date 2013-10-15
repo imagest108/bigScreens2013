@@ -27,12 +27,7 @@ void draw(){
       }
      blist.get(i).display();
    }
-   ///blist.get(random1).update();
-   ///blist.get(random2).update();
-   ///blist.get(random3).update();
-   
-   //blist.get(2).display();
-   //b.jump();
+
 }
 
 void makeJump(String id){
@@ -75,7 +70,7 @@ void removeBall(String id){
 
   blist.get(i).update();  
   blist.get(i).display(); 
-  
+
   }
 }
 
@@ -107,12 +102,6 @@ class Ball{
     isJumping = false;
   }
 
-  void jump(){
-   
-    update();
-    display();
-    
-  }
   
   void update(){
     //ypos = ypos + ( yspeed * ydirection);
