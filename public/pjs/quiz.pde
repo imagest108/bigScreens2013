@@ -29,9 +29,6 @@ void setup () {
   particles = new ArrayList<Particle>();
   for (int i = 0; i < 50; i++) {
     particles.add(new Particle(new Vec2D(random(width),random(height)),"00000"));
-    //p = new Particle(new Vec2D(random(0,width/5),height/3),id);
-    //particles.add(p);
-
   }
   //stageAttractor = new AttractionBehavior(new Vec2D(mouseX,mouseY),-1, 0.01);
   physics.addBehavior(new GravityBehavior(new Vec2D(0, 0.15)));

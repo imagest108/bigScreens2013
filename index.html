@@ -26,7 +26,7 @@
       });
 
       socket.on('news', function (data) {
-           console.log(data);
+           //console.log(data);
            
            if(data.index > 0) {
             createUser(data);
@@ -38,12 +38,12 @@
 
       socket.on('button', function (data) {
 
-        for(var i = 0 ; i < userObjs.length; i++){
+       for(var i = 0 ; i < userObjs.length; i++){
+
 
           if(userObjs[i].objectID == data.id){
             console.log("find the moving user!");
-            updateUser(userObjs[i], data.button);
-
+            chooseOne(data);
           }
         } 
       });
@@ -60,7 +60,7 @@
 
       socket.on('disconnect', function (data){
 
-        console.log("Disconnected User : "+ data);
+        //console.log("Disconnected User : "+ data);
         removeUser(data);
 
       });
@@ -77,8 +77,15 @@
         
       };
 
-      var updateUser = function (object, button){
+      var chooseOne = function (data){
+        var choice = {
+             objectID : data.id,
+             sectionID : data.button,
+        };
 
+        var pjs = Processing.getInstanceById("thecanvas");          
+        //pjs.addUser(userObj.objectID);
+        pjs.setSection(choice.objectID, choice.sectionID);
 
       };
 
@@ -92,11 +99,11 @@
         };
 
         userObjs.push(userObj);
-        console.log(userObjs);
+        //console.log(userObjs);
 
         var pjs = Processing.getInstanceById("thecanvas");          
         //pjs.addUser(userObj.objectID);
-        pjs.addParticle(data.uid);
+        pjs.addParticle(userObj.objectID);
         
       };
 
@@ -107,20 +114,13 @@
           if(userObjs[i].objectID == data){
 
               userObjs.splice(i,1);
-              console.log(userObjs);
+              //console.log(userObjs);
 
               var pjs = Processing.getInstanceById("thecanvas");          
-              pjs.removeBall(data);
+              pjs.removeUsers(data);
 
           }
         }
-      };
-
-      var moveToTarget = function (id, num){
-
-          var pjs = Processing.getInstanceById(id);
-          // pjs.setColor(num);
-
       };
 
       var displayCanvas = function(){
@@ -138,11 +138,11 @@
     
     <div class="container" id = "gui" style = "display:inline">
       <div id="debug"><h3>Choose a land of survival!</h3></div>
-       <button id="red" onclick= "sendbtn('red');"></button>
+       <button id="red" onclick= "sendbtn(1);"></button>
        <br/>
-       <button id="yellow" onclick= "sendbtn('yellow');"></button>
+       <button id="yellow" onclick= "sendbtn(2);"></button>
        <br/>
-       <button id="purple" onclick= "sendbtn('purple');"></button>
+       <button id="purple" onclick= "sendbtn(3);"></button>
     </div>
     <canvas width = "1212" height = "558" id = "thecanvas" style = "display:none" data-processing-sources="/pjs/example.pde"></canvas>
 

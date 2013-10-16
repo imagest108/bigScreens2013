@@ -1,4 +1,3 @@
-  
    var  VerletPhysics2D = toxi.physics2d.VerletPhysics2D,
         VerletParticle2D = toxi.physics2d.VerletParticle2D,
         AttractionBehavior = toxi.physics2d.behaviors.AttractionBehavior,
@@ -6,54 +5,84 @@
         Vec2D = toxi.geom.Vec2D,
         Rect = toxi.geom.Rect;
   
-//Particle.prototype = new toxi.physics2d.VerletParticle2D();
-//Particle.prototype.constructor = Particle;
-
-//Attractor.prototype = new toxi.physics2d.VerletParticle2D();
-//Attractor.prototype.constructor = Attractor;
-
-  
-  
   import toxi.geom.*;
   import toxi.physics2d.*;
   import toxi.physics2d.behaviors.*;
   
   VerletPhysics2D physics;
   AttractionBehavior mouseAttractor;
-  ArrayList<User> userList;
-  User user;
+  AttractionBehavior attractorSec1;
+  AttractionBehavior attractorSec2; 
+  AttractionBehavior attractorSec3;
 
+
+  HashMap userMap;
   Vec2D mousePos;
-  
+  Iterator i;  // Get an iterator
+
   void setup() {
-    size(screen.width, screen.height);
+    size(900, 300);
     // setup physics with 10% drag
     physics = new VerletPhysics2D();
     physics.setDrag(0.05);
     physics.setWorldBounds(new Rect(0, 0, width, height));
-    // the NEW way to add gravity to the simulation, using behaviors
-    //physics.addBehavior(new GravityBehavior(new Vec2D(0, 0.15)));
-    userList = new ArrayList<User>();
-  
+
+    attractorSec1 = new AttractionBehavior(new Vec2D(width/6, height/2), -1.2, 0.01);
+    attractorSec2 = new AttractionBehavior(new Vec2D(width/2, height/2), -1.2, 0.01);
+    attractorSec3 = new AttractionBehavior(new Vec2D(width*4/6, height/2), -1.2, 0.01);
+    
+
+    userMap = new HashMap();
+
   }
 
   void addParticle(String id) {
    
    Vec2D randLoc = Vec2D.randomVector().scale(5).addSelf(width / 2, height/2);
-   VerletParticle2D p = new VerletParticle2D(randLoc);
+   VerletParticle2D p = new VerletParticle2D(randLoc, 3);
    physics.addParticle(p);
-   console.log("Paricle number = "+physics.particles.length+","+id);
+   //console.log("Paricle number = "+physics.particles.length+","+id);
    
-   user = new User(id, physics.particles.length);
-   userList.add(user); 
-   console.log(userList);
+   userMap.put(id, (physics.particles.length));
+   //console.log("HashMap: " +userMap.size());
 
     // add a negative attraction force field around the new particle
    physics.addBehavior(new AttractionBehavior(p, 20, -1.2, 0.01))
   
   }
 
+  void setSection(String id, int sectionID) {
+     
+    Vec2D sec1loc = Vec2D.randomVector().scale(5).addSelf(width / 6, height/2);
+    Vec2D sec2loc = Vec2D.randomVector().scale(5).addSelf(width / 2, height/2);
+    Vec2D sec3loc = Vec2D.randomVector().scale(5).addSelf(width*4 / 6, height/2);
+    
 
+    i = userMap.entrySet().iterator();  // Get an iterator
+    
+    while (i.hasNext()) {
+      Map.Entry me = (Map.Entry)i.next();
+        if (me.getKey() == id) {
+           int tempIndex = me.getValue();
+           //console.log(tempIndex-1);
+        }
+     }   
+      if(sectionID == 1){
+          physics.particles[tempIndex-1] = new VerletParticle2D(sec1loc, 3);
+          physics.addBehavior(attractorSec1);
+      }
+      else if(sectionID == 2){
+          physics.particles[tempIndex-1] = new VerletParticle2D(sec2loc, 3);
+          physics.addBehavior(attractorSec2);
+      }else if(sectionID == 3){
+         physics.particles[tempIndex-1] = new VerletParticle2D(sec3loc, 3);
+         physics.addBehavior(attractorSec3); 
+      }
+          //physics.addBehavior(attractorSec1);
+      
+      //console.log("Processing = User id: " + id +" , section: "+sectionID);
+
+  }
 
   void draw() {
     background(0,0,255);
@@ -61,11 +90,38 @@
     fill(255);
 
     physics.update();
-    
-    for (int i=0;i<userList.size();i++) {
-        //console.log(userList.get(i).id);
-    }
 
+    i = userMap.entrySet().iterator();  // Get an iterator
+    while (i.hasNext()) {
+    Map.Entry me = (Map.Entry)i.next();
+        drawUsers(me.getValue());
+    }
+  }
+
+  void drawUsers(int index){
+
+      VerletParticle2D p = physics.particles[index-1];
+      fill(255);
+      ellipse(p.x, p.y, 30, 30);
+      fill(0);
+      textSize(12);
+      text(index, p.x, p.y); 
+
+  }
+
+  void removeUsers(String id){
+
+    console.log(id + "is removed.");
+    //userMap = userMap.remove(id);
+    //console.log(userMap.size());
+
+    i = userMap.entrySet().iterator();  // Get an iterator
+    while (i.hasNext()) {
+        Map.Entry me = (Map.Entry)i.next();
+        if (me.getKey() == id) {
+           i.remove();
+        }
+    }
   }
   
   void mousePressed() {
@@ -84,31 +140,4 @@
   void mouseReleased() {
     // remove the mouse attraction when button has been released
     physics.removeBehavior(mouseAttractor);
-  }
-
-  class User {
-
-    String id;
-    int index;
-    VerletParticle2D p;
-
-    User(String _id, int _index){
-
-        id = _id;
-        index = _index;
-        p = physics.particles.get(index-1);
-    }
-
-    void display(){
-
-        console.log(p.x+" = p.x , "+p.y+" = p.y")
-
-        fill(255);
-        ellipse(p.x, p.y, 50, 50);
-        fill(0);
-        text(index, p.x, p.y);
-
-    }
-
-
   }
