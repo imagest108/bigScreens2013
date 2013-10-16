@@ -138,9 +138,7 @@ class Ball{
   int getRad(){
     return rad;
   }
-  String getId(){
-    return id;
-  }
+
   
 
 } 

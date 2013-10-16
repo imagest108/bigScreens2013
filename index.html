@@ -4,6 +4,8 @@
     <meta name="viewport" content="width=device-width, user-scalable=no">
 
     <link rel="stylesheet" type="text/css" href="/css/main.css">
+    
+    <script src="/js/toxiclibs.js"></script>
     <script src="/js/processing-1.4.1.js"></script>
     <script src="/socket.io/socket.io.js"></script>  
     <script>
@@ -34,7 +36,6 @@
 
       });
 
-
       socket.on('button', function (data) {
 
         for(var i = 0 ; i < userObjs.length; i++){
@@ -47,7 +48,6 @@
         } 
       });
 
-      
       var sendbtn = function(button) {
         socket.emit('button', { id: id, button: button });
       };
@@ -79,16 +79,15 @@
 
       var updateUser = function (object, button){
 
+
       };
 
       var createUser = function (data){
 
-            var userObj = {
+        var userObj = {
 
           objectID : data.uid,
           objectIndex : "user"+ data.index,
-          objectX : data.index*100,
-          objectY : 500,
 
         };
 
@@ -96,7 +95,8 @@
         console.log(userObjs);
 
         var pjs = Processing.getInstanceById("thecanvas");          
-        pjs.addBall(userObj.objectX, userObj.objectY, userObj.objectID);
+        //pjs.addUser(userObj.objectID);
+        pjs.addParticle(data.uid);
         
       };
 
@@ -144,7 +144,7 @@
        <br/>
        <button id="purple" onclick= "sendbtn('purple');"></button>
     </div>
-    <canvas width = "1212" height = "558" id = "thecanvas" style = "display:none" data-processing-sources="/pjs/ball.pde"></canvas>
+    <canvas width = "1212" height = "558" id = "thecanvas" style = "display:none" data-processing-sources="/pjs/example.pde"></canvas>
 
   </body>
 </html>
