@@ -49,7 +49,7 @@ io.sockets.on('connection',
     var display_socket_2 = users[2];
     var controler = users[3];
 
-    
+
     io.sockets.socket(display_socket_0).emit('news', { uid: socket.id, index: users.length-1});
     io.sockets.socket(display_socket_1).emit('news', { uid: socket.id, index: users.length-1});
     io.sockets.socket(display_socket_2).emit('news', { uid: socket.id, index: users.length-1});

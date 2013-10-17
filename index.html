@@ -22,6 +22,7 @@
       var objectID; 
 
       var controllerID;
+      var deathnote = [];
 
       socket.on('connect', function(){
 
@@ -46,23 +47,39 @@
 
        for(var i = 0 ; i < userObjs.length; i++){
 
-
           if(userObjs[i].objectID == data.id){
-            console.log("find the moving user!");
+            userObjs[i].sectionID = data.button;  
+            //console.log("find the moving user!: " + userObjs[i].sectionID);
             chooseOne(data);
           } 
         } 
 
         if(data.id == controllerID){
 
-               var pjs = Processing.getInstanceById("thecanvas");          
-              //pjs.addUser(userObj.objectID);
-              console.log("data.button: "+data.button);
-              console.log("data: "+data);
-              
-              pjs.setKill(data.button);
-          };
+          for(var i = 0 ; i < userObjs.length; i++){
+            if(userObjs[i].sectionID == data.button){
+              deathnote.push(userObjs[i].objectID);  
+            //console.log("find the moving user!: " + userObjs[i].sectionID);
+            } 
+          } 
+          //chooseOne(data);
+          kill();
+          deathnote = [];
+          //pjs.addUser(userObj.objectID);
+          //console.log("data.button: "+data.button);
+          //console.log("data: "+data);
+          //pjs.setKill(data.button);
+          console.log(deathnote.length);
+        }
       });
+
+      var kill = function (){
+
+          for(var i = 0 ; i < deathnote.length; i++){
+            removeUser(deathnote[i]);
+            console.log("deathnote : "+ deathnote[i]);
+          }
+      };
 
       var setController = function(data) {
 
