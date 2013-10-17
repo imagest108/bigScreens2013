@@ -11,8 +11,8 @@
     <script>
 
       //var socket = io.connect('http://bigscreensprototype.herokuapp.com/');
-      //var socket = io.connect('http://localhost:5000/');
-      var socket = io.connect('http://ec2-54-200-79-16.us-west-2.compute.amazonaws.com:8080/');
+      var socket = io.connect('http://localhost:5000/');
+      //var socket = io.connect('http://ec2-54-200-79-16.us-west-2.compute.amazonaws.com:8080/');
 
       var id; 
       var userObjs = [];
@@ -20,6 +20,8 @@
       var objectX;
       var objectY;
       var objectID; 
+
+      var controllerID;
 
       socket.on('connect', function(){
 
@@ -30,12 +32,14 @@
       socket.on('news', function (data) {
            //console.log(data);
            
-           if(data.index > 0) {
-            createUser(data);
-           }else {
+           if(data.index <= 2) {
             displayCanvas();
+           }else if(data.index == 3) {
+            setController(data);  
+           }else if(data.index > 3) {
+            createUser(data);
+            
            }
-
       });
 
       socket.on('button', function (data) {
@@ -46,9 +50,26 @@
           if(userObjs[i].objectID == data.id){
             console.log("find the moving user!");
             chooseOne(data);
-          }
+          } 
         } 
+
+        if(data.id == controllerID){
+
+               var pjs = Processing.getInstanceById("thecanvas");          
+              //pjs.addUser(userObj.objectID);
+              console.log("data.button: "+data.button);
+              console.log("data: "+data);
+              
+              pjs.setKill(data.button);
+          };
       });
+
+      var setController = function(data) {
+
+          controllerID = data.uid;
+          console.log(controllerID);
+
+      };
 
       var sendbtn = function(button) {
         socket.emit('button', { id: id, button: button });
@@ -96,7 +117,8 @@
         var userObj = {
 
           objectID : data.uid,
-          objectIndex : "user"+ data.index,
+          objectIndex : data.index,
+          sectionID : 2
 
         };
 
@@ -146,7 +168,7 @@
        <br/>
        <button id="purple" onclick= "sendbtn(3);"></button>
     </div>
-    <canvas width = "1212" height = "558" id = "thecanvas" style = "display:none" data-processing-sources="/pjs/example.pde"></canvas>
+    <canvas width = "1212" height = "558" id = "thecanvas" style = "display:none" data-processing-sources="/pjs/display.pde"></canvas>
 
   </body>
 </html>

@@ -7,8 +7,8 @@ var express = require('express');
 var http = require('http');
 var path = require('path');
 var WebSocketServer = require('ws').Server;
-//var port = process.env.PORT || 5000;
-var port = 8080;
+var port = process.env.PORT || 5000;
+//var port = 8080;
 
 
 // the ExpressJS App
@@ -47,8 +47,9 @@ io.sockets.on('connection',
     var display_socket_0 = users[0];
     var display_socket_1 = users[1];
     var display_socket_2 = users[2];
+    var controler = users[3];
 
-
+    
     io.sockets.socket(display_socket_0).emit('news', { uid: socket.id, index: users.length-1});
     io.sockets.socket(display_socket_1).emit('news', { uid: socket.id, index: users.length-1});
     io.sockets.socket(display_socket_2).emit('news', { uid: socket.id, index: users.length-1});
