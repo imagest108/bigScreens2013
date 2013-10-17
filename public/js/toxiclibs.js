@@ -16354,6 +16354,7 @@ AttractionBehavior.prototype = {
 		if(dist < this.radiusSquared){
 			var f = delta.normalizeTo((1.0 - dist / this.radiusSquared)).jitter(this.jitter).scaleSelf(this.attrStrength);
 			p.addForce(f);
+
 		}
 	},
 	

@@ -17,46 +17,54 @@
 
 
   HashMap userMap;
-  Vec2D mousePos;
   Iterator i;  // Get an iterator
 
+  Vec2D core;  
+  int margin = 100;
+
   void setup() {
-    size(900, 300);
+    size(11520, 1080);
     // setup physics with 10% drag
     physics = new VerletPhysics2D();
     physics.setDrag(0.05);
-    physics.setWorldBounds(new Rect(0, 0, width, height));
-
-    attractorSec1 = new AttractionBehavior(new Vec2D(width/6, height/2), -1.2, 0.01);
-    attractorSec2 = new AttractionBehavior(new Vec2D(width/2, height/2), -1.2, 0.01);
-    attractorSec3 = new AttractionBehavior(new Vec2D(width*4/6, height/2), -1.2, 0.01);
-    
-
+    physics.setWorldBounds(new Rect(margin, margin, width-margin, height-margin));
     userMap = new HashMap();
 
   }
 
   void addParticle(String id) {
+
+
    
    Vec2D randLoc = Vec2D.randomVector().scale(5).addSelf(width / 2, height/2);
-   VerletParticle2D p = new VerletParticle2D(randLoc, 3);
+   VerletParticle2D p = new VerletParticle2D(randLoc, 30);
    physics.addParticle(p);
    //console.log("Paricle number = "+physics.particles.length+","+id);
    
    userMap.put(id, (physics.particles.length));
    //console.log("HashMap: " +userMap.size());
 
-    // add a negative attraction force field around the new particle
-   physics.addBehavior(new AttractionBehavior(p, 20, -1.2, 0.01))
+    core = randLoc;
+    natureF = new AttractionBehavior(core, 5, -1.2, 0.01);
+    physics.addBehavior(natureF);
   
+   
+    // add a negative attraction force field around the new particle
+   
   }
 
   void setSection(String id, int sectionID) {
-     
+ 
+
     Vec2D sec1loc = Vec2D.randomVector().scale(5).addSelf(width / 6, height/2);
     Vec2D sec2loc = Vec2D.randomVector().scale(5).addSelf(width / 2, height/2);
-    Vec2D sec3loc = Vec2D.randomVector().scale(5).addSelf(width*4 / 6, height/2);
+    Vec2D sec3loc = Vec2D.randomVector().scale(5).addSelf(width*5 / 6, height/2);
     
+    attractorSec1 = new AttractionBehavior(sec1loc, -1.2, 0.01);
+    attractorSec2 = new AttractionBehavior(sec2loc, -1.2, 0.01);
+    attractorSec3 = new AttractionBehavior(sec3loc, -1.2, 0.01);
+   
+
 
     i = userMap.entrySet().iterator();  // Get an iterator
     
@@ -68,15 +76,43 @@
         }
      }   
       if(sectionID == 1){
-          physics.particles[tempIndex-1] = new VerletParticle2D(sec1loc, 3);
-          physics.addBehavior(attractorSec1);
+
+          core = sec1loc;
+          natureF = new AttractionBehavior(core, 5, -1.2, 0.01);
+          
+          //physics.behaviors.clear();
+          physics.addBehavior(natureF);
+          
+          //physics.addBehavior(attractorSec1);
+          //physics.particles[tempIndex-1].setWorldBounds(new Rect(margin, margin, width / 3-margin, height-margin));
+          physics.particles[tempIndex-1] = new VerletParticle2D(sec1loc, 30);
+            
+
       }
       else if(sectionID == 2){
-          physics.particles[tempIndex-1] = new VerletParticle2D(sec2loc, 3);
-          physics.addBehavior(attractorSec2);
+
+          core = sec2loc;
+          natureF = new AttractionBehavior(core, 5, -1.2, 0.01);
+
+          //physics.behaviors.clear();
+          physics.addBehavior(natureF);
+          //physics.addBehavior(attractorSec2);
+          //physics.particles[tempIndex-1].setWorldBounds(new Rect(margin+ width /3, margin, width*2 / 3-margin, height-margin));
+          physics.particles[tempIndex-1] = new VerletParticle2D(sec2loc, 30);
+          
+
       }else if(sectionID == 3){
-         physics.particles[tempIndex-1] = new VerletParticle2D(sec3loc, 3);
-         physics.addBehavior(attractorSec3); 
+
+         core = sec3loc;
+          natureF = new AttractionBehavior(core, 5, -1.2, 0.01);
+          
+          //physics.behaviors.clear();
+          physics.addBehavior(natureF);
+          //physics.addBehavior(attractorSec3); 
+         //physics.particles[tempIndex-1].setWorldBounds(new Rect(width*2 /3+margin, margin, width-margin, height-margin));
+         physics.particles[tempIndex-1] = new VerletParticle2D(sec3loc, 30);
+         
+
       }
           //physics.addBehavior(attractorSec1);
       
@@ -85,10 +121,20 @@
   }
 
   void draw() {
-    background(0,0,255);
+
+   
+    background(255);
     noStroke();
     fill(255);
 
+    //ellipseMode(CENTER);
+    fill(140,21,15);
+    rect(0, 0, width / 3, height);
+    fill(255, 204, 0);
+    rect(width /3, 0, width*2 / 3, height);
+    fill(102, 0, 102);
+    rect(width*2 /3, 0, width, height);
+    
     physics.update();
 
     i = userMap.entrySet().iterator();  // Get an iterator
@@ -100,12 +146,16 @@
 
   void drawUsers(int index){
 
-      VerletParticle2D p = physics.particles[index-1];
+      VerletParticle2D tempP = physics.particles[index-1];
+      
+
       fill(255);
-      ellipse(p.x, p.y, 30, 30);
-      fill(0);
-      textSize(12);
-      text(index, p.x, p.y); 
+      ellipse(tempP.x, tempP.y, 150, 150);
+      fill(255,120,120);
+      textSize(20);
+      text(index, tempP.x, tempP.y); 
+
+
 
   }
 
@@ -123,21 +173,4 @@
         }
     }
   }
-  
-  void mousePressed() {
-    //addParticle();
-    mousePos = new Vec2D(mouseX, mouseY);
-    // create a new positive attraction force field around the mouse position (radius=250px)
-    mouseAttractor = new AttractionBehavior(mousePos, 250, 0.9);
-    physics.addBehavior(mouseAttractor);
-  }
-  
-  void mouseDragged() {
-    // update mouse attraction focal point
-    mousePos.set(mouseX, mouseY);
-  }
-  
-  void mouseReleased() {
-    // remove the mouse attraction when button has been released
-    physics.removeBehavior(mouseAttractor);
-  }
+ 
