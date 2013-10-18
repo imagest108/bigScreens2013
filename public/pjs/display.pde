@@ -20,7 +20,7 @@ var  VerletPhysics2D = toxi.physics2d.VerletPhysics2D,
   Iterator i; 
   Vec2D core;  
   int margin = 100;
-  Boolean kill1 = false;
+
   void setup() {
     size(11520, 1080);
     // setup physics with 10% drag
@@ -29,6 +29,9 @@ var  VerletPhysics2D = toxi.physics2d.VerletPhysics2D,
     physics.setWorldBounds(new Rect(margin, margin, width-margin, height-margin));
     userMap = new HashMap();
 
+    displayText1 = "bit.ly/chooseordie";
+    displayText2 = "bit.ly/chooseordie";
+    displayText3 = "bit.ly/chooseordie";
   }
 
   void addParticle(String id) {
@@ -102,8 +105,8 @@ var  VerletPhysics2D = toxi.physics2d.VerletPhysics2D,
           //physics.behaviors.clear();
           physics.addBehavior(natureF);
           //physics.addBehavior(attractorSec3); 
-         //physics.particles[tempIndex-1].setWorldBounds(new Rect(width*2 /3+margin, margin, width-margin, height-margin));
-         physics.particles[tempIndex-1] = new VerletParticle2D(sec3loc, 30);
+          //physics.particles[tempIndex-1].setWorldBounds(new Rect(width*2 /3+margin, margin, width-margin, height-margin));
+          physics.particles[tempIndex-1] = new VerletParticle2D(sec3loc, 30);
          
       }
       
@@ -117,12 +120,22 @@ var  VerletPhysics2D = toxi.physics2d.VerletPhysics2D,
     noStroke();
     fill(255);
 
+    textMode(CENTER);
     fill(140,21,15);
     rect(0, 0, width / 3, height);
+    fill(255,80);
+    textSize(100);
+    text(displayText1, width / 6 - textWidth(displayText1) / 2, height/2);
     fill(255, 204, 0);
     rect(width /3, 0, width*2 / 3, height);
+    fill(255,80);
+    textSize(100);
+    text(displayText2, width/3 + width/6 - textWidth(displayText2) / 2, height/2);
     fill(102, 0, 102);
     rect(width*2 /3, 0, width, height);
+    fill(255,80);
+    textSize(100);
+    text(displayText3, width*2/3 + width/6 - textWidth(displayText3) / 2, height/2);
     
     physics.update();
 
@@ -130,40 +143,10 @@ var  VerletPhysics2D = toxi.physics2d.VerletPhysics2D,
     
     while (i.hasNext()) {
       Map.Entry me = (Map.Entry)i.next();
-        
-          if(kill1){
-              
-             /* if (me.getKey() == id) {
-              i.remove();
-              }*/
-              killSec1(me.getKey(), me.getValue());
-
-          }
-              
-          drawUsers(me.getValue()); 
+      drawUsers(me.getValue()); 
           
-       }
-
-       //kill1 = false;
-  }
-
-  void setKill(int sectionID){
-    
-    if(sectionID == 1) {
-      kill1 = true;  
-      console.log(kill1);
-    }      
-    // if(sectionID == 2)
-  }
-  void killSec1(int index, string id){
-    VerletParticle2D tempP = physics.particles[index-1];
-    if(tempP.x > 0 && tempP.x < width/6){
-      userMap.remove(id);
-    } 
-      kill1 = false;
-    
-    
-  }
+    }
+ }
 
   void drawUsers(int index){
 

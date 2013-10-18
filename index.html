@@ -11,8 +11,8 @@
     <script>
 
       //var socket = io.connect('http://bigscreensprototype.herokuapp.com/');
-      var socket = io.connect('http://localhost:5000/');
-      //var socket = io.connect('http://ec2-54-200-79-16.us-west-2.compute.amazonaws.com:8080/');
+      //var socket = io.connect('http://localhost:5000/');
+      var socket = io.connect('http://ec2-54-200-79-16.us-west-2.compute.amazonaws.com:8080/');
 
       var id; 
       var userObjs = [];
@@ -23,11 +23,16 @@
 
       var controllerID;
       var deathnote = [];
+      var deathland;
+
+      var displayText1 = "";
+      var displayText2 = "";
+      var displayText3 = "";
 
       socket.on('connect', function(){
 
-        console.log("Connected : "+socket.socket.sessionid+","+userObjs.length);
         id = socket.socket.sessionid;
+        console.log("Connected : "+socket.socket.sessionid+","+userObjs.length);
       });
 
       socket.on('news', function (data) {
@@ -36,11 +41,14 @@
            if(data.index <= 2) {
             displayCanvas();
            }else if(data.index == 3) {
-            setController(data);  
+            setController(data); 
+            
            }else if(data.index > 3) {
             createUser(data);
+
             
            }
+           
       });
 
       socket.on('button', function (data) {
@@ -60,10 +68,11 @@
             if(userObjs[i].sectionID == data.button){
               deathnote.push(userObjs[i].objectID);  
             //console.log("find the moving user!: " + userObjs[i].sectionID);
+            deathland = data.button;
             } 
           } 
           //chooseOne(data);
-          kill();
+          kill(deathland);
           deathnote = [];
           //pjs.addUser(userObj.objectID);
           //console.log("data.button: "+data.button);
@@ -73,18 +82,36 @@
         }
       });
 
-      var kill = function (){
+      var kill = function (sectionID){
+
+          if(sectionID == 1){
+               displayText1 = "BOOM!!"
+          }else if(sectionID == 2){
+               displayText2 = "BOOM!!" 
+          }else if(sectionID == 3){
+               displayText3 = "BOOM!!"
+          }
 
           for(var i = 0 ; i < deathnote.length; i++){
             removeUser(deathnote[i]);
             console.log("deathnote : "+ deathnote[i]);
           }
-      };
+          setInterval(function(){
+                displayText1 = "bit.ly/chooseordie";
+                displayText2 = "bit.ly/chooseordie";
+                displayText3 = "bit.ly/chooseordie";
+          }, 1000);
+
+     };
 
       var setController = function(data) {
 
           controllerID = data.uid;
           console.log(controllerID);
+          if(data.uid == controllerID){
+            var text = document.getElementById("debug"); 
+            text.text("Controller");
+          }
 
       };
 
@@ -168,7 +195,8 @@
         canvas.style.display="inline";
         
         var Display_socket_buttons = document.getElementById("gui"); 
-        Display_socket_buttons.style.display = "none";        
+        Display_socket_buttons.style.display = "none";  
+
       };      
 
 
