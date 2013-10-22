@@ -28,6 +28,7 @@ var  VerletPhysics2D = toxi.physics2d.VerletPhysics2D,
   Boolean moveToSec2 = false;
   Boolean moveToSec3 = false;
 
+
   void setup() {
     size(11520, 1080);
     // setup physics with 10% drag
@@ -177,17 +178,17 @@ var  VerletPhysics2D = toxi.physics2d.VerletPhysics2D,
     rect(0, 0, width / 3, height);
     fill(255,80);
     textSize(100);
-    text(displayText1, width / 6 - textWidth(displayText1) / 2, height/2);
+    text(displayText1, width / 12 - textWidth(displayText1) / 2, height/2);
     fill(255, 204, 0);
     rect(width /3, 0, width*2 / 3, height);
     fill(255,80);
     textSize(100);
-    text(displayText2, width/3 + width/6 - textWidth(displayText2) / 2, height/2);
+    text(displayText2, width*5 / 12 - textWidth(displayText2) / 2, height/2);
     fill(102, 0, 102);
     rect(width*2 /3, 0, width, height);
     fill(255,80);
     textSize(100);
-    text(displayText3, width*2/3 + width/6 - textWidth(displayText3) / 2, height/2);
+    text(displayText3, width*9/12 - textWidth(displayText3) / 2, height/2);
     
     physics.update();
 
