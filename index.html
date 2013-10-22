@@ -14,7 +14,11 @@
       var socket = io.connect('http://localhost:5000/');
       //var socket = io.connect('http://ec2-54-200-79-16.us-west-2.compute.amazonaws.com:8080/');
 
+      var scream = "<audio autoplay><source src = 'http://itp.nyu.edu/~jyp323/ju/wp-content/uploads/2013/10/180350__jorickhoofd__scream-noooh.wav' type= 'audio/wav'></audio>";
+      var song = "<audio autoplay><source src = 'http://itp.nyu.edu/~jyp323/ju/wp-content/uploads/2013/10/Tetris-8-bit-Music-Tetris-Theme-Song.mp3' type= 'audio/mp3'></audio>";
+
       var id; 
+      var type;
       var userObjs = [];
 
       var objectX;
@@ -29,26 +33,28 @@
       var displayText2 = "";
       var displayText3 = "";
 
+      //setInterval(playAudio(song), 3000);
       socket.on('connect', function(){
 
         id = socket.socket.sessionid;
-        console.log("Connected : "+socket.socket.sessionid+","+userObjs.length);
+        console.log("Connected : "+socket.socket.sessionid);
       });
 
       socket.on('news', function (data) {
-           //console.log(data);
+           console.log(data);
            
-           if(data.index <= 2) {
-            displayCanvas();
-           }else if(data.index == 3) {
-            setController(data); 
-            
-           }else if(data.index > 3) {
-            createUser(data);
+           type = data.uType;
 
-            
+           if(data.uType == 'display') {
+            displayCanvas();
+           }else if(data.uType == 'controller') {
+            controllerID = data.uid;
+            displayController();
+           }else if(data.uType == 'user') {
+            createUser(data);
            }
            
+          // console.log("c in news : "+controllerID);
       });
 
       socket.on('button', function (data) {
@@ -62,7 +68,10 @@
           } 
         } 
 
-        if(data.id == controllerID){
+        //console.log("c in button socket: "+controllerID);
+
+        if(data.uType == 'controller'){
+          //console.log(data);
 
           for(var i = 0 ; i < userObjs.length; i++){
             if(userObjs[i].sectionID == data.button){
@@ -74,15 +83,13 @@
           //chooseOne(data);
           kill(deathland);
           deathnote = [];
-          //pjs.addUser(userObj.objectID);
-          //console.log("data.button: "+data.button);
-          //console.log("data: "+data);
-          //pjs.setKill(data.button);
           console.log(deathnote.length);
         }
       });
 
       var kill = function (sectionID){
+
+          //console.log("c in kill : "+controllerID);
 
           if(sectionID == 1){
                displayText1 = "BOOM!!"
@@ -95,7 +102,11 @@
           for(var i = 0 ; i < deathnote.length; i++){
             removeUser(deathnote[i]);
             console.log("deathnote : "+ deathnote[i]);
+
           }
+
+          playAudio(scream);
+
           setInterval(function(){
                 displayText1 = "bit.ly/chooseordie";
                 displayText2 = "bit.ly/chooseordie";
@@ -104,17 +115,6 @@
 
      };
 
-      var setController = function(data) {
-
-          controllerID = data.uid;
-          console.log(controllerID);
-          /*if(data.uid == controllerID){
-            var text = document.getElementById("debug"); 
-            text.text("Controller");
-          }*/
-
-      };
-
       var sendbtn = function(button) {
         socket.emit('button', { id: id, button: button });
       };
@@ -122,8 +122,15 @@
       socket.on('message', function (data){
 
         console.log("Recieved : "+ data);
-
+  
       });
+
+      var displayController = function(){
+
+        console.log("I'm the controller!");
+        document.getElementById("debug").innerHTML = "You're the controller!";
+       
+      };
 
       socket.on('disconnect', function (data){
 
@@ -199,11 +206,17 @@
 
       };      
 
+      function playAudio(audioHTML){
+
+         $("audio").html(audioHTML);
+      }
 
     </script>
     
   </head>
   <body onload = "initcanvas();">
+
+    <audio></audio>
     
     <div class="container" id = "gui" style = "display:inline">
       <div id="debug"><h3>Choose a land of survival!</h3></div>

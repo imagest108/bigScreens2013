@@ -23,7 +23,7 @@ var  VerletPhysics2D = toxi.physics2d.VerletPhysics2D,
   Iterator i; 
   Vec2D core;  
   int margin = 100;
-  float easing = 0.01;
+  float easing = 0.05;
   Boolean moveToSec1 = false;
   Boolean moveToSec2 = false;
   Boolean moveToSec3 = false;
