@@ -113,12 +113,21 @@ io.sockets.on('connection',
   
           });
 
-          socket.on('disconnect', function() {
+          socket.on('kill', function (data){
 
-            io.sockets.socket(display_socket_0).emit('disconnect', socket.id);
-            io.sockets.socket(display_socket_1).emit('disconnect', socket.id);
-            io.sockets.socket(display_socket_2).emit('disconnect', socket.id);
-            
+            io.sockets.socket(data).emit('message',"You've got killed");
+
+          });
+
+          socket.on('disconnect', function (data) {
+
+            //io.sockets.socket(display_socket_0).emit('disconnect', socket.id);
+            //io.sockets.socket(display_socket_1).emit('disconnect', socket.id);
+            //io.sockets.socket(display_socket_2).emit('disconnect', socket.id);
+            //window.close();
+
+            //io.sockets.socket(data).emit('disconnect',data);
+
             var index = -1;
             for(var i=0; i<users.length; i++) {
               if(users[i].id == socket.id)
@@ -127,6 +136,7 @@ io.sockets.on('connection',
             if(index != -1) {
               users.splice(index,1);
             }
+
           });
       });
   });

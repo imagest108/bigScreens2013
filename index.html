@@ -33,9 +33,8 @@
       var displayText2 = "";
       var displayText3 = "";
 
-      var isScreaming = false;
+      var scream = document.getElementsByTagName("audio")[0];
 
-      //setInterval(playAudio(song), 3000);
       socket.on('connect', function(){
 
         id = socket.socket.sessionid;
@@ -89,11 +88,6 @@
         }
       });
 
-      if(isScreaming){
-        
-        isScreaming = false;
-      }
-
       var kill = function (sectionID){
 
           //console.log("c in kill : "+controllerID);
@@ -106,17 +100,16 @@
                displayText3 = "BOOM!!"
           }
 
+          //scream.play();
+
           for(var i = 0 ; i < deathnote.length; i++){
             removeUser(deathnote[i]);
+            socket.emit('kill',deathnote[i]);
             console.log("deathnote : "+ deathnote[i]);
 
           }
 
-          setInterval(function(){
-            $("audio").html(scream);
-          }, 3000);
-          //playAudio(scream);
-
+          
           setInterval(function(){
                 displayText1 = "bit.ly/chooseordie";
                 displayText2 = "bit.ly/chooseordie";
@@ -131,8 +124,12 @@
 
       socket.on('message', function (data){
 
-        console.log("Recieved : "+ data);
-  
+        //console.log("Recieved : "+ data);
+          if (data == "You've got killed"){ 
+             window.open('', '_self', '');
+            window.close();
+          }
+
       });
 
       var displayController = function(){
@@ -146,6 +143,7 @@
 
         //console.log("Disconnected User : "+ data);
         removeUser(data);
+        //window.close();
 
       });
 
@@ -199,8 +197,7 @@
           if(userObjs[i].objectID == data){
 
               userObjs.splice(i,1);
-              //console.log(userObjs);
-
+              
               var pjs = Processing.getInstanceById("thecanvas");          
               pjs.removeUsers(data);
 
@@ -216,17 +213,13 @@
 
       };      
 
-      function playAudio(audioHTML){
-
-         $("audio").html(audioHTML);
-      }
-
     </script>
     
   </head>
   <body onload = "initcanvas();">
 
-    <audio></audio>
+    <audio id="scream"><source src = 'http://itp.nyu.edu/~jyp323/ju/wp-content/uploads/2013/10/180350__jorickhoofd__scream-noooh.wav' type= 'audio/wav'></audio>
+
     
     <div class="container" id = "gui" style = "display:inline">
       <div id="debug"><h3>Choose a land of survival!</h3></div>
