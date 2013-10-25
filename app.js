@@ -7,8 +7,8 @@ var express = require('express');
 var http = require('http');
 var path = require('path');
 var WebSocketServer = require('ws').Server;
-var port = process.env.PORT || 5000;
-//var port = 8080;
+//var port = process.env.PORT || 5000;
+var port = 8080;
 
 
 // the ExpressJS App
@@ -27,6 +27,13 @@ console.log('http server listening on %d', port);
 
 app.configure('development', function(){
   app.use(express.errorHandler());
+});
+
+
+app.post('/', function(req, res) {
+  
+  console.log("received form submission");
+  console.log(req.body);
 });
 
 var io = require('socket.io').listen(httpServer);

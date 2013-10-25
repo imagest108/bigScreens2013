@@ -7,17 +7,19 @@
     
     <script src="/js/toxiclibs.js"></script>
     <script src="/js/processing-1.4.1.js"></script>
+    <script src="/js/jquery-1.9.1.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>  
     <script>
 
       //var socket = io.connect('http://bigscreensprototype.herokuapp.com/');
-      var socket = io.connect('http://localhost:5000/');
-      //var socket = io.connect('http://ec2-54-200-79-16.us-west-2.compute.amazonaws.com:8080/');
+      //var socket = io.connect('http://localhost:5000/');
+      var socket = io.connect('http://ec2-54-200-79-16.us-west-2.compute.amazonaws.com:8080/');
 
       var scream = "<audio autoplay><source src = 'http://itp.nyu.edu/~jyp323/ju/wp-content/uploads/2013/10/180350__jorickhoofd__scream-noooh.wav' type= 'audio/wav'></audio>";
       var song = "<audio autoplay><source src = 'http://itp.nyu.edu/~jyp323/ju/wp-content/uploads/2013/10/Tetris-8-bit-Music-Tetris-Theme-Song.mp3' type= 'audio/mp3'></audio>";
 
-      var id; 
+      var id;
+      var index; 
       var type;
       var userObjs = [];
 
@@ -52,7 +54,7 @@
             controllerID = data.uid;
             displayController();
            }else if(data.uType == 'user') {
-            createUser(data);
+            //createUser(data);
            }
            
           // console.log("c in news : "+controllerID);
@@ -171,23 +173,39 @@
 
       };
 
-      var createUser = function (data){
 
+      var findCharacter = function() {
+          
+          var character = $("input").val();
+          console.log(character);
+          var pjs = Processing.getInstanceById("thecanvas");          
+          pjs.setCharacter(character);
+
+      }
+      
+      var createUser = function (){
+
+        var myCharacter = $("input").val();
+        //console.log(id, myCharacter);
+          
+        index = userObjs.length+1;
+         
         var userObj = {
 
-          objectID : data.uid,
-          objectIndex : data.index,
-          sectionID : 2
+          objectID : id,
+          objectIndex : index,
+          sectionID : 2,
+          character : myCharacter
 
         };
 
         userObjs.push(userObj);
-        //console.log(userObjs);
-
+        //console.log(userObjs[0]);
+ 
         var pjs = Processing.getInstanceById("thecanvas");          
         //pjs.addUser(userObj.objectID);
-        pjs.addParticle(userObj.objectID);
-        
+        pjs.addParticle(userObj.objectID, userObj.character);
+      
       };
 
       var removeUser = function(data){
@@ -220,8 +238,14 @@
 
     <audio id="scream"><source src = 'http://itp.nyu.edu/~jyp323/ju/wp-content/uploads/2013/10/180350__jorickhoofd__scream-noooh.wav' type= 'audio/wav'></audio>
 
-    
+  
+
     <div class="container" id = "gui" style = "display:inline">
+
+          <h3>Put your ID on the namecard</h3>
+          <input id="username" type="text" placeholder="ex)Obama" />
+          <input type="submit" id="btnSubmit" class="btn" value="Submit" onclick = "createUser();"/>
+
       <div id="debug"><h3>Choose a land of survival!</h3></div>
        <button id="red" onclick= "sendbtn(1);"></button>
        <br/>
@@ -230,6 +254,5 @@
        <button id="purple" onclick= "sendbtn(3);"></button>
     </div>
     <canvas width = "1212" height = "558" id = "thecanvas" style = "display:none" data-processing-sources="/pjs/display.pde"></canvas>
-
   </body>
 </html>

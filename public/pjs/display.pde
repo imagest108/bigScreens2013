@@ -27,7 +27,8 @@ var  VerletPhysics2D = toxi.physics2d.VerletPhysics2D,
   Boolean moveToSec1 = false;
   Boolean moveToSec2 = false;
   Boolean moveToSec3 = false;
-
+  ArrayList<PImage> imagelist;
+  PImage obama, stevejobs, ladygaga, danielshiffman, nickiminaj, spongebob, img6, img7, img8, img9, stevejobs0; 
 
   void setup() {
     size(11520, 1080);
@@ -36,13 +37,32 @@ var  VerletPhysics2D = toxi.physics2d.VerletPhysics2D,
     physics.setDrag(0.05);
     physics.setWorldBounds(new Rect(margin, margin, width-margin, height-margin));
     userMap = new HashMap();
+    imagelist = new ArrayList<PImage>();
 
+
+    obama = loadImage("http://itp.nyu.edu/~jj1357/characters/ObamaF.jpg");
+    stevejobs = loadImage("http://itp.nyu.edu/~jj1357/characters/stevejobsF.jpg");
+    ladygaga = loadImage("http://itp.nyu.edu/~jj1357/characters/ladygagaF.jpg");
+    danielshiffman = loadImage("http://itp.nyu.edu/~jj1357/characters/danielshiffmanF.jpg");
+    nickiminaj = loadImage("http://itp.nyu.edu/~jj1357/characters/nickiminajF.jpg");
+    spongebob = loadImage("http://itp.nyu.edu/~jj1357/characters/spongebobF.jpg");
+    img6 = loadImage("http://itp.nyu.edu/~jj1357/characters/spongebobF.jpg");
+    //img6 = loadImage("")
     displayText1 = "bit.ly/chooseordie";
     displayText2 = "bit.ly/chooseordie";
     displayText3 = "bit.ly/chooseordie";
-  }
+    
+    /*
+    imagelist.add(obama);
+    imagelist.add(stevejobs);
+    imagelist.add(ladygaga);
+    imagelist.add(danielshiffman);
+    imagelist.add(nickiminaj);
+    imagelist.add(spongebob);
+    */
+    }
 
-  void addParticle(String id) {
+  void addParticle(String id, String characterName) {
 
    Vec2D randLoc = Vec2D.randomVector().scale(5).addSelf(width / 2, height/2);
    VerletParticle2D p = new VerletParticle2D(randLoc, 30);
@@ -56,6 +76,8 @@ var  VerletPhysics2D = toxi.physics2d.VerletPhysics2D,
     natureF = new AttractionBehavior(core, 5, -1.2, 0.01);
     physics.addBehavior(natureF);
   
+    imagelist.add(characterName);
+    console.log("processing says: "+ characterName);
   }
 
   void setSection(String id, int sectionID) {
@@ -204,10 +226,13 @@ var  VerletPhysics2D = toxi.physics2d.VerletPhysics2D,
   void drawUsers(int index){
 
       VerletParticle2D tempP = physics.particles[index-1];
-      
-      
+ 
       fill(255);
-      ellipse(tempP.x, tempP.y, 150, 150);
+      //translate(tempP.x, tempP.y);
+      //translate(width/2, height/2);
+      //box(60, 60, 30);
+      image(imagelist.get(index-1), tempP.x, tempP.y, 150, 150);
+
       fill(255,120,120);
       textSize(20);
       text(index, tempP.x, tempP.y); 
