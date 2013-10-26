@@ -17,7 +17,7 @@ var  VerletPhysics2D = toxi.physics2d.VerletPhysics2D,
   AttractionBehavior attractorSec1;
   AttractionBehavior attractorSec2; 
   AttractionBehavior attractorSec3;
-
+  //String characterId;
 
   HashMap userMap;
   Iterator i; 
@@ -28,8 +28,9 @@ var  VerletPhysics2D = toxi.physics2d.VerletPhysics2D,
   Boolean moveToSec2 = false;
   Boolean moveToSec3 = false;
   ArrayList<PImage> imagelist;
-  PImage obama, stevejobs, ladygaga, danielshiffman, nickiminaj, spongebob, img6, img7, img8, img9, stevejobs0; 
-
+  Arraylist<String> namelist;
+  PImage obamaP, stevejobsP, ladygagaP, danielshiffmanP, nickiminajP, spongebobP, img6, img7, img8, img9, stevejobs0; 
+  String obama, stevejobs, ladygaga, danielshiffman, nickiminaj, spongebob, img6, img7, img8, img9, stevejobs0;
   void setup() {
     size(11520, 1080);
     // setup physics with 10% drag
@@ -38,28 +39,29 @@ var  VerletPhysics2D = toxi.physics2d.VerletPhysics2D,
     physics.setWorldBounds(new Rect(margin, margin, width-margin, height-margin));
     userMap = new HashMap();
     imagelist = new ArrayList<PImage>();
+    namelist = new ArrayList<String>();
 
-
-    obama = loadImage("http://itp.nyu.edu/~jj1357/characters/ObamaF.jpg");
-    stevejobs = loadImage("http://itp.nyu.edu/~jj1357/characters/stevejobsF.jpg");
-    ladygaga = loadImage("http://itp.nyu.edu/~jj1357/characters/ladygagaF.jpg");
-    danielshiffman = loadImage("http://itp.nyu.edu/~jj1357/characters/danielshiffmanF.jpg");
-    nickiminaj = loadImage("http://itp.nyu.edu/~jj1357/characters/nickiminajF.jpg");
-    spongebob = loadImage("http://itp.nyu.edu/~jj1357/characters/spongebobF.jpg");
+    obamaP = loadImage("http://itp.nyu.edu/~jj1357/characters/ObamaF.jpg");
+    stevejobsP = loadImage("http://itp.nyu.edu/~jj1357/characters/stevejobsF.jpg");
+    ladygagaP = loadImage("http://itp.nyu.edu/~jj1357/characters/ladygagaF.jpg");
+    danielshiffmanP = loadImage("http://itp.nyu.edu/~jj1357/characters/danielshiffmanF.jpg");
+    nickiminajP = loadImage("http://itp.nyu.edu/~jj1357/characters/nickiminajF.jpg");
+    spongebobP = loadImage("http://itp.nyu.edu/~jj1357/characters/spongebobF.jpg");
     img6 = loadImage("http://itp.nyu.edu/~jj1357/characters/spongebobF.jpg");
+
     //img6 = loadImage("")
     displayText1 = "bit.ly/chooseordie";
     displayText2 = "bit.ly/chooseordie";
     displayText3 = "bit.ly/chooseordie";
     
-    /*
+    
     imagelist.add(obama);
     imagelist.add(stevejobs);
     imagelist.add(ladygaga);
     imagelist.add(danielshiffman);
     imagelist.add(nickiminaj);
     imagelist.add(spongebob);
-    */
+    
     }
 
   void addParticle(String id, String characterName) {
@@ -71,12 +73,14 @@ var  VerletPhysics2D = toxi.physics2d.VerletPhysics2D,
    
    userMap.put(id, (physics.particles.length));
    //console.log("HashMap: " +userMap.size());
-
+    characterId = characterName;
     core = randLoc;
     natureF = new AttractionBehavior(core, 5, -1.2, 0.01);
     physics.addBehavior(natureF);
-  
-    imagelist.add(characterName);
+
+    namelist.add(characterName);
+    
+    //imagelist.add(characterName);
     console.log("processing says: "+ characterName);
   }
 
@@ -223,7 +227,7 @@ var  VerletPhysics2D = toxi.physics2d.VerletPhysics2D,
     }
  }
 
-  void drawUsers(int index){
+  void drawUsers(int index, string name){
 
       VerletParticle2D tempP = physics.particles[index-1];
  
@@ -231,7 +235,16 @@ var  VerletPhysics2D = toxi.physics2d.VerletPhysics2D,
       //translate(tempP.x, tempP.y);
       //translate(width/2, height/2);
       //box(60, 60, 30);
-      image(imagelist.get(index-1), tempP.x, tempP.y, 150, 150);
+/*
+      if(namelist.get(index-1).equals("obama") == true){
+        //console.log("index" + index + " is drawing obama");
+        rect(width/2, height/2, 150, 150);
+        
+      }
+
+*/
+      image(name, width/2, height/2, 150, 150);
+      
 
       fill(255,120,120);
       textSize(20);

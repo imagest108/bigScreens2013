@@ -7,8 +7,8 @@ var express = require('express');
 var http = require('http');
 var path = require('path');
 var WebSocketServer = require('ws').Server;
-//var port = process.env.PORT || 5000;
-var port = 8080;
+var port = process.env.PORT || 5000;
+//var port = 8080;
 
 
 // the ExpressJS App
@@ -36,6 +36,7 @@ app.post('/', function(req, res) {
   console.log(req.body);
 });
 
+
 var io = require('socket.io').listen(httpServer);
 var users = [];
 var newUser = false;
@@ -53,7 +54,7 @@ io.sockets.on('connection',
   
     //console.log("We have a new mobile client: " + socket.id);
     users[users.length] = socket.id;
-    
+    console.log("connected: "+socket.id);
     //Set a Java client as a display_socket
     
     if(users.length < 4){
@@ -117,6 +118,15 @@ io.sockets.on('connection',
             io.sockets.socket(display_socket_0).emit('button', data);
             io.sockets.socket(display_socket_1).emit('button', data);
             io.sockets.socket(display_socket_2).emit('button', data);
+  
+          });
+
+          socket.on('character', function (data) {
+
+            console.log('character',data);
+            io.sockets.socket(display_socket_0).emit('character', data);
+            io.sockets.socket(display_socket_1).emit('character', data);
+            io.sockets.socket(display_socket_2).emit('character', data);
   
           });
 
